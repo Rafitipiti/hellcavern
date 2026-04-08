@@ -1,0 +1,348 @@
+/* Importamos una fuente estilo Pixel/Terminal de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+
+:root {
+  --color-neon: #00ffff;
+  --color-danger: #ff0044;
+  --color-warning: #ffcc00;
+  --color-bg: #050505;
+  --font-main: 'VT323', monospace;
+  --font-retro: 'Press Start 2P', cursive;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  cursor: crosshair;
+  /* Un toque de juego retro */
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-neon);
+  font-family: var(--font-main);
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  -webkit-font-smoothing: none;
+  /* Mantiene los píxeles nítidos */
+  text-rendering: pixelated;
+  overflow: hidden;
+  /* Evita scrolls accidentales en el juego */
+  height: 100vh;
+  width: 100vw;
+}
+
+h1,
+h2,
+h3,
+.btn-fate {
+  /* La fuente 'Press Start 2P' es muy ancha, 
+     bajamos un poco el tracking para que no se estire */
+
+  letter-spacing: -1px;
+}
+
+/* --- EFECTO CRT (SCANLINES) --- */
+/* Esto crea las líneas horizontales de los monitores viejos */
+body::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 100;
+  /* Siempre por encima de todo */
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+}
+
+/* Animación de parpadeo suave para textos "Vivos" */
+.flicker {
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* --- ANIMACIONES DE JUEGO --- */
+
+/* Sacudida de pantalla cuando hay daño */
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+.shake-effect {
+  animation: shake 0.5s;
+}
+
+/* Pulso rojo para vida baja */
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 68, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 0, 68, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 68, 0);
+  }
+}
+
+.low-hp {
+  animation: pulse-red 1.5s infinite;
+  border-color: var(--color-danger) !important;
+}
+
+/* Estilo para los contenedores tipo "Terminal" */
+.retro-border {
+  border: 2px solid var(--color-neon);
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+/* Personalización de la barra de scroll (si llegara a aparecer) */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neon);
+}
+
+/* --- LAYOUT GENERAL --- */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 5px 20px;
+  gap: 5px;
+  position: relative;
+  overflow-y: auto;
+}
+
+/* Header arriba y centrado */
+.game-header {
+  width: 90%;
+  max-width: 1000px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.monster-arena {
+  width: 100%; /* Ahora se ajusta al panel izquierdo */
+  max-width: 100%; 
+  height: auto; /* Permite que crezca si el nombre es largo */
+  min-height: 60px;
+  padding: 10px 15px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between; /* Corregido el carácter extraño */
+  gap: 15px;
+
+  border: 2px solid var(--color-danger);
+  background: rgba(40, 0, 0, 0.9);
+  box-shadow: 0 0 15px rgba(255, 0, 68, 0.4);
+  margin: 10px 0;
+  z-index: 10;
+}
+
+.players-grid {
+  display: flex; /* Cambiamos de Grid a Flex */
+  flex-wrap: wrap; /* Para que bajen si no caben */
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  flex: 1; /* Esto empuja la consola hacia abajo y da aire */
+  margin: 15px 0;
+}
+
+.player-card {
+  width: 45%; /* Dos tarjetas por fila si hay espacio */
+  min-width: 250px; /* Si la pantalla es chica, se pondrán una debajo de otra */
+  padding: 12px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* --- CONSOLA / LOG (ABAJO) --- */
+/* Asegúrate de que tu contenedor de mensajes tenga esta clase */
+.game-console {
+  width: 90%;
+  max-width: 1000px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  padding: 15px;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 5;
+}
+
+@media (max-height: 800px) {
+  .player-card {
+    padding: 10px;
+    min-height: 140px;
+    /* Se encogen un poco en pantallas bajas */
+  }
+
+  .monster-arena {
+    padding: 10px;
+  }
+}
+
+.disabled-btn {
+  opacity: 0.5;
+  border-color: #444 !important;
+  color: #444 !important;
+  cursor: not-allowed !important;
+  /* Cambia el cursor de cruz a prohibido */
+  box-shadow: none !important;
+  filter: grayscale(1);
+}
+
+.disabled-btn:hover {
+  background: transparent !important;
+  color: #444 !important;
+  box-shadow: none !important;
+}
+
+.btn-artifact {
+  background: #1a1a1a;
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+  font-family: var(--font-main);
+  font-size: 0.8rem;
+  padding: 2px 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.btn-artifact:hover {
+  background: var(--color-warning);
+  color: #000;
+  box-shadow: 0 0 10px var(--color-warning);
+}
+
+.left-panel {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.right-panel {
+  flex: 1; /* Toma el otro 50% */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.8s ease; /* Efecto suave al cambiar escenario */
+}
+
+.sprite-icon {
+  font-size: 4rem; /* Sprites grandes y visibles */
+  filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.active-sprite {
+  filter: drop-shadow(0 0 20px var(--color-neon));
+}
+
+.mini-hp-bar {
+  width: 50px;
+  height: 6px;
+  background: #333;
+  border: 1px solid #fff;
+  margin-top: 10px;
+}
+
+.hp-fill {
+  height: 100%;
+  background: #0f0;
+  transition: width 0.3s ease;
+}
+
+.monster-arena h2 {
+  font-size: 1.3rem !important; 
+  letter-spacing: 0px;
+}
+
+.monster-arena span {
+  font-size: 1.3rem !important;
+}
+
+.ambient-overlay {
+  position: absolute;
+  inset: 0;
+  /* Crea un círculo de luz en el centro y oscuridad hacia los bordes */
+  background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none; /* Para que puedas seguir haciendo clic en lo que haya debajo */
+  z-index: 1;
+}
+
+@keyframes torch-flicker {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.ambient-overlay-dynamic {
+  animation: torch-flicker 3s infinite ease-in-out;
+}
