@@ -228,7 +228,9 @@ body::before {
   background: rgba(40, 0, 0, 0.9);
   box-shadow: 0 0 15px rgba(255, 0, 68, 0.4);
   z-index: 10;
+  flex-shrink: 0; /* Evita que se colapse o se estire sobre otros */
 }
+
 
 
 .players-grid {
@@ -238,8 +240,9 @@ body::before {
   gap: 15px;
   width: 100%;
   flex: 0 1 auto;
-  /* No forzamos que llene todo el espacio vertical */
+  margin-top: 5px; /* Pequeño margen extra para seguridad */
 }
+
 
 
 
@@ -299,8 +302,11 @@ body::before {
   .monster-arena {
     padding: 2px 8px;
     gap: 8px;
-    min-height: 40px;
+    min-height: 35px;
+    max-height: 60px; /* Limitamos altura en móvil */
+    overflow: hidden;
   }
+
 
 
   .monster-arena h2,

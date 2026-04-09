@@ -1138,7 +1138,7 @@ function App() {
       const dx = Math.abs(clientX - prev.lastX);
       const dy = Math.abs(clientY - prev.lastY);
       const dist = dx + dy;
-      const newProgress = Math.min(100, prev.progress + (dist > 5 ? dist * 0.15 : 0));
+      const newProgress = Math.min(100, prev.progress + (dist > 5 ? dist * 0.07 : 0));
       return { progress: newProgress, lastX: clientX, lastY: clientY };
     });
   };
@@ -1323,15 +1323,15 @@ function App() {
 
         {activeMinigame.type === 'MASH' && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-            <p style={{ color: '#ccc', fontSize: '1.5rem' }}>¡Haz CLICK RÁPIDO para romper el cristal!</p>
-            <p style={{ color: 'var(--color-warning)', fontSize: '2rem' }}>Poder: {minigameClicks}/15</p>
+            <p style={{ color: '#ccc', fontSize: '1.2rem' }}>¡Haz CLICK RÁPIDO para romper el cristal!</p>
+            <p style={{ color: 'var(--color-warning)', fontSize: '1.5rem' }}>Poder: {minigameClicks}/10</p>
             <button
               className="btn-fate"
-              style={{ fontSize: '3rem', padding: '20px 40px', borderRadius: '20px' }}
+              style={{ fontSize: '2rem', padding: '15px 30px', borderRadius: '15px' }}
               onClick={() => {
                 const newClicks = minigameClicks + 1;
                 setMinigameClicks(newClicks);
-                if (newClicks === 15) finishMinigame(true);
+                if (newClicks === 10) finishMinigame(true);
               }}
             >
               🔨 GOLPEAR
@@ -1469,15 +1469,15 @@ function App() {
               handleMouseShake({ clientX: touch.clientX, clientY: touch.clientY });
             }}
 
-            style={{ width: '100%', height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#222', border: '2px dashed var(--color-danger)', cursor: 'crosshair', position: 'relative' }}
+            style={{ width: '100%', height: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#222', border: '2px dashed var(--color-danger)', cursor: 'crosshair', position: 'relative' }}
           >
-            <p style={{ color: 'var(--color-danger)', fontSize: '1.5rem', marginBottom: '20px', textAlign: 'center', pointerEvents: 'none' }}>
+            <p style={{ color: 'var(--color-danger)', fontSize: '1.2rem', marginBottom: '10px', textAlign: 'center', pointerEvents: 'none' }}>
               ¡SANGUIJUELAS DEL ABISMO!<br />¡SACUDE EL RATÓN AQUÍ ADENTRO PARA QUITARLAS!
             </p>
-            <div style={{ width: '80%', height: '30px', backgroundColor: '#000', border: '1px solid #fff', pointerEvents: 'none' }}>
+            <div style={{ width: '80%', height: '20px', backgroundColor: '#000', border: '1px solid #fff', pointerEvents: 'none' }}>
               <div style={{ width: `${shakeState.progress}%`, height: '100%', backgroundColor: 'var(--color-neon)' }} />
             </div>
-            <p style={{ pointerEvents: 'none', marginTop: '10px' }}>{Math.floor(shakeState.progress)}%</p>
+            <p style={{ pointerEvents: 'none', marginTop: '5px', fontSize: '1rem' }}>{Math.floor(shakeState.progress)}%</p>
           </div>
         )}
       </div>
