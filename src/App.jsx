@@ -659,27 +659,29 @@ function App() {
         }
         break;
       case '🍄 Bosque de Hongos':
-        if (dice === 1) {
+        if (dice <= 2) {
           const monstruoElegido = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
           startCombat(monstruoElegido);
           msg = `¡Un ${monstruoElegido.name} bloquea el camino! ¡A luchar!`;
         }
+
         else if (dice <= 2) msg = "Las esporas están quietas. Nada ocurre.";
         else if (dice <= 4) { p.hp = Math.min(maxHPActual, p.hp + 1); msg = `${p.name} consume frutos sanadores y se cura 1 HP.`; }
         else { p.hp -= 2; setShakingTarget('all'); msg = "Lianas venenosas azotan a " + p.name + " produciendo 2 HP de daño."; }
         break;
       case '🕳️ Cavernas Profundas':
-        if (dice === 1) {
+        if (dice <= 2) {
           const monstruoElegido = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
           startCombat(monstruoElegido);
           msg = `¡Un ${monstruoElegido.name} bloquea el camino! ¡A luchar!`;
         }
+
         else if (dice <= 2) { p.hp -= 1; msg = `${p.name} cae en una fosa por la oscuridad (-1 HP). `; }
         else if (dice <= 4) { p.hp -= 2; setShakingTarget('all'); msg = "Algo muerde a " + p.name + " desde las sombras (-2 HP)."; }
         else msg = "Cruzas el túnel con cautela y éxito.";
         break;
       case '🐉 Guarida de la Bestia':
-        if (dice === 1) {
+        if (dice <= 2) {
           const monstruoElegido = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
           startCombat(monstruoElegido);
           msg = `¡Un ${monstruoElegido.name} bloquea el camino! ¡A luchar!`;
@@ -747,11 +749,12 @@ function App() {
         else msg = "Encuentras una fogata aún encendida.";
         break;
       case '🧪 El Río de Azufre':
-        if (dice === 1) {
+        if (dice <= 2) {
           const monstruoElegido = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
           startCombat(monstruoElegido);
           msg = `¡Un ${monstruoElegido.name} bloquea el camino! ¡A luchar!`;
         }
+
         else if (dice <= 2) {
           p.hp -= 2;
           const nextP = newPlayers[(currentPlayerIdx + 1) % 4];
@@ -762,11 +765,12 @@ function App() {
         else msg = "Cruzas el puente de piedra con éxito.";
         break;
       case '💀 Altar de Sacrificios':
-        if (dice === 1) {
+        if (dice <= 2) {
           const monstruoElegido = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
           startCombat(monstruoElegido);
           msg = `¡Un ${monstruoElegido.name} bloquea el camino! ¡A luchar!`;
         }
+
         else if (dice <= 2) {
           setPendingDecision({
             type: 'DARK_PACT',
@@ -855,11 +859,12 @@ function App() {
         else { p.hp -= 5; setShakingTarget('all'); msg = `¡EL GUARDIÁN TE JUZGA! ${p.name} pierde 5 puntos de vida.`; }
         break;
       case '🤢 Pantano Pestilente':
-        if (dice === 1) {
+        if (dice <= 2) {
           const monstruoElegido = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
           startCombat(monstruoElegido);
           msg = `¡Un ${monstruoElegido.name} bloquea el camino! ¡A luchar!`;
         }
+
         else if (dice <= 2) {
           p.hp -= 2;
           setShakingTarget('all');
@@ -947,7 +952,7 @@ function App() {
         }
         break;
       case '🪓 Trampa del Verdugo':
-        if (dice === 1) {
+        if (dice <= 2) {
           const monstruoElegido = MONSTERS.find(m => m.name === '🪨 Gólem de Azufre');
           startCombat(monstruoElegido);
           msg = "¡El Verdugo ha invocado a su mascota! ¡A luchar!";
@@ -964,7 +969,8 @@ function App() {
           const monstruoElegido = MONSTERS.find(m => m.name === '👾 Sombra Voraz');
           startCombat(monstruoElegido);
           msg = "¡Los muertos no descansan! Una Sombra emerge de una tumba.";
-        } else if (dice <= 4) {
+        }
+ else if (dice <= 4) {
           setPendingDecision({
             type: 'CEMENTERIO_SAQUEO',
             title: "SAQUEO DE TUMBAS",
