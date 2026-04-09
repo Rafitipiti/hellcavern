@@ -1608,8 +1608,6 @@ function App() {
 
         <main className="players-grid"
           style={{
-            marginTop: gameState === 'COMBAT' ? '-10px' : '0px',
-            marginBottom: gameState === 'COMBAT' ? '-15px' : '0px',
             zIndex: 5
           }}
         >
