@@ -155,7 +155,7 @@ function App() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [activeMinigame, setActiveMinigame] = useState(null);
   const [minigameClicks, setMinigameClicks] = useState(0);
-  const [raceState, setRaceState] = useState({ selected: null, positions: [0, 0, 0, 0], finished: false });
+  const [raceState, setRaceState] = useState({ selected: null, positions: [0, 0, 0, 0], finished: false, winnerIndex: null });
   const [shellState, setShellState] = useState({ phase: 'REVEAL', cups: [false, false, false], shuffleCount: 0, cupsPositions: [0, 1, 2], goldCupId: 0 });
   const [shakeState, setShakeState] = useState({ progress: 0, lastX: 0, lastY: 0 });
   const [deathCause, setDeathCause] = useState('');
@@ -405,7 +405,7 @@ function App() {
         });
 
         setMinigameClicks(0);
-        setRaceState({ selected: null, positions: [0, 0, 0, 0], finished: false });
+        setRaceState({ selected: null, positions: [0, 0, 0, 0], finished: false, winnerIndex: null });
 
         const goldPos = Math.floor(Math.random() * 3);
         setShellState({ phase: 'REVEAL', cups: [false, false, false], shuffleCount: 0, cupsPositions: [0, 1, 2], goldCupId: goldPos });
@@ -1097,13 +1097,14 @@ function App() {
     return () => { clearInterval(interval); clearTimeout(failsafe); };
   }, [gameState, activeMinigame?.type, raceState.selected, raceState.finished]);
 
-  useEffect(() => {
-    if (activeMinigame?.type === 'RACE' && raceState.finished) {
+    if (activeMinigame?.type === 'RACE' && raceState.finished && raceState.winnerIndex === null) {
       const winnerIndex = raceState.positions.indexOf(Math.max(...raceState.positions));
+      setRaceState(prev => ({ ...prev, winnerIndex }));
       const won = (winnerIndex === raceState.selected);
       const timer = setTimeout(() => finishMinigame(won), 2500);
       return () => clearTimeout(timer);
     }
+
   }, [raceState.finished]);
 
   useEffect(() => {
@@ -1420,11 +1421,12 @@ function App() {
                   }}>
                     🪳
                   </div>
-                  {raceState.finished && raceState.positions[i] >= 100 && (
+                  {raceState.finished && raceState.winnerIndex === i && (
                     <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#0f0', fontWeight: 'bold', zIndex: 1, background: 'rgba(0,0,0,0.8)', padding: '2px 5px', borderRadius: '4px' }}>
                       ¡GANADOR!
                     </span>
                   )}
+
                 </div>
               </div>
             ))}
