@@ -1171,7 +1171,12 @@ function App() {
   if (gameState === 'START') {
     return (
       <div className="game-container" style={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+        <div className="portrait-warning">
+          <h2 className="death-title">GIRA TU DISPOSITIVO</h2>
+          <p style={{ color: 'var(--color-neon)', fontSize: '1.2rem' }}>Este juego se disfruta mejor en horizontal ⚔️</p>
+        </div>
         <motion.h1
+
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="death-title flicker"
@@ -1242,7 +1247,12 @@ function App() {
   if (gameState === 'HISTORY') {
     return (
       <div className="game-container" style={{ justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'center', padding: '40px', overflowY: 'auto' }}>
+        <div className="portrait-warning">
+          <h2 className="death-title">GIRA TU DISPOSITIVO</h2>
+          <p style={{ color: 'var(--color-neon)', fontSize: '1.2rem' }}>Este juego se disfruta mejor en horizontal ⚔️</p>
+        </div>
         <h2 className="death-title flicker" style={{ fontSize: '2.5rem', marginBottom: '30px', color: 'var(--color-warning)' }}>
+
           CRÓNICAS DE LA CAVERNA
         </h2>
 
@@ -1292,7 +1302,12 @@ function App() {
     const currentP = players[currentPlayerIdx];
     return (
       <div className="game-container" style={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center', backgroundColor: '#000' }}>
-        <h2 className="death-title flicker" style={{ fontSize: '2.5rem', color: 'var(--color-neon)' }}>
+        <div className="portrait-warning">
+          <h2 className="death-title">GIRA TU DISPOSITIVO</h2>
+          <p style={{ color: 'var(--color-neon)', fontSize: '1.2rem' }}>Este juego se disfruta mejor en horizontal ⚔️</p>
+        </div>
+        <h2 className="death-title flicker" style={{ fontSize: '2.5rem', color: 'var(--color-neon)', textAlign: 'center' }}>
+
           ¡DESAFÍO SORPRESA EN {scenario.toUpperCase()}!
         </h2>
         <p style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '20px' }}>Atención {currentP.name}. Recompensa: 🪙 {activeMinigame.goldReward}</p>
@@ -1337,6 +1352,13 @@ function App() {
                     setMinigameClicks(newClicks);
                     if (newClicks === 7) finishMinigame(true);
                   }}
+                  onTouchStart={() => {
+                    if ((minigameClicks & (1 << i)) !== 0) return;
+                    const newClicks = minigameClicks | (1 << i);
+                    setMinigameClicks(newClicks);
+                    if (newClicks === 7) finishMinigame(true);
+                  }}
+
                   style={{
                     position: 'absolute',
                     top: `${((activeMinigame.timeLeft * [13, 19, 29][i]) % 80) + 10}%`,
@@ -1442,6 +1464,11 @@ function App() {
         {activeMinigame.type === 'MOUSE_SHAKE' && (
           <div
             onMouseMove={handleMouseShake}
+            onTouchMove={(e) => {
+              const touch = e.touches[0];
+              handleMouseShake({ clientX: touch.clientX, clientY: touch.clientY });
+            }}
+
             style={{ width: '100%', height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#222', border: '2px dashed var(--color-danger)', cursor: 'crosshair', position: 'relative' }}
           >
             <p style={{ color: 'var(--color-danger)', fontSize: '1.5rem', marginBottom: '20px', textAlign: 'center', pointerEvents: 'none' }}>
@@ -1489,35 +1516,23 @@ function App() {
         zIndex: 1
       }} />
 
-      <div className="left-panel" style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '20px',
-        boxSizing: 'border-box',
-        borderRight: '2px solid rgba(255,255,255,0.1)',
-        position: 'relative',
-        zIndex: 2,
-        backgroundColor: 'transparent',
-        overflowY: 'auto'
-      }}>
+      <div className="left-panel">
+        <div className="portrait-warning">
+          <h2 className="death-title">GIRA TU DISPOSITIVO</h2>
+          <p style={{ color: 'var(--color-neon)', fontSize: '1.2rem' }}>Este juego se disfruta mejor en horizontal ⚔️</p>
+        </div>
+
 
         <div className="overlay-dark" />
 
         <header
           className="game-header retro-border"
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            position: 'relative',
             zIndex: 2,
-            width: 'calc(100% - 70px)',
-            padding: '10px 20px',
             marginTop: '10px'
           }}
         >
+
           <div>TURNO: {turn}</div>
 
           <div style={{ color: 'var(--color-warning)', display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -1594,18 +1609,10 @@ function App() {
           style={{
             marginTop: gameState === 'COMBAT' ? '-10px' : '0px',
             marginBottom: gameState === 'COMBAT' ? '-15px' : '0px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignContent: 'center',
-            gap: '20px',
-            flex: 1,
-            margin: '20px 0',
-            width: '100%',
-            maxWidth: '900px',
-            overflowY: 'visible'
+            zIndex: 5
           }}
         >
+
 
           {players.map((p, idx) => {
             const isTurnoVisible = idx === currentPlayerIdx && gameState !== 'COMBAT';
@@ -1619,20 +1626,16 @@ function App() {
               <div
                 key={p.id}
                 className={`player-card retro-border ${isTurnoVisible ? 'active' : ''} ${shakingTarget === p.id ? 'shake-effect' : ''}`}
-                style={{
-                  width: '45%',
-                  minWidth: '280px',
-                  margin: '0'
-                }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px', flexWrap: 'wrap', gap: '5px' }}>
                   <img
                     src={CHARACTER_IMAGES[p.name] || CHARACTER_IMAGES['default']}
                     alt={p.name}
                     style={{
-                      width: '40px',
-                      height: '40px',
-                      marginRight: '10px',
+                      width: '30px',
+                      height: '30px',
+                      marginRight: '5px',
                       borderRadius: '50%',
                       border: '2px solid var(--color-neon)',
                       boxShadow: '0 0 5px var(--color-neon)',
@@ -1642,12 +1645,16 @@ function App() {
                   <h3 style={{
                     margin: 0,
                     textTransform: 'uppercase',
-                    letterSpacing: '1px',
-                    flex: 1,
-                    fontSize: '1.2rem'
+                    letterSpacing: '0px',
+                    flex: '1 1 60px',
+                    fontSize: '1rem',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
                   }}>
                     {p.name}
                   </h3>
+
 
                   <div style={{
                     display: 'flex',
@@ -1689,10 +1696,10 @@ function App() {
                   </div>
                 </div>
 
-                <div style={{ margin: '10px 0' }}>
+                <div style={{ margin: '5px 0' }} className="hide-on-mobile">
                   <p style={{
                     margin: 0,
-                    fontSize: '1rem',
+                    fontSize: '0.9rem',
                     color: 'var(--color-warning)',
                     opacity: 0.8,
                     fontStyle: 'italic'
@@ -1700,6 +1707,7 @@ function App() {
                     {p.title}
                   </p>
                 </div>
+
 
                 <div className="hp-container">
                   <div
