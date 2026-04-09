@@ -1103,6 +1103,7 @@ function App() {
     return () => { clearInterval(interval); clearTimeout(failsafe); };
   }, [gameState, activeMinigame?.type, raceState.selected, raceState.finished]);
 
+  useEffect(() => {
     if (activeMinigame?.type === 'RACE' && raceState.finished && raceState.winnerIndex === null) {
       const winnerIndex = raceState.positions.indexOf(Math.max(...raceState.positions));
       setRaceState(prev => ({ ...prev, winnerIndex }));
@@ -1110,8 +1111,8 @@ function App() {
       const timer = setTimeout(() => finishMinigame(won), 2500);
       return () => clearTimeout(timer);
     }
-
   }, [raceState.finished]);
+
 
   useEffect(() => {
     if (gameState !== 'MINIGAME' || activeMinigame?.type !== 'SHELL') return;
