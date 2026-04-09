@@ -40,6 +40,7 @@
   /* Un toque de juego retro */
 }
 
+html,
 body {
   background-color: var(--color-bg);
   color: var(--color-neon);
@@ -50,9 +51,11 @@ body {
   text-rendering: pixelated;
   overflow: hidden;
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
   font-size: calc(16px * var(--font-scale));
 }
+
 
 
 h1,
@@ -187,6 +190,8 @@ body::before {
   align-items: center;
   width: 100vw;
   min-height: 100vh;
+  min-height: 100dvh;
+
   padding: 5px 20px;
   gap: 5px;
   position: relative;
@@ -384,7 +389,9 @@ body::before {
   background-color: transparent;
   overflow-y: auto;
   height: 100vh;
+  height: 100dvh;
 }
+
 
 .right-panel {
   flex: 1 1 50%;
@@ -396,7 +403,9 @@ body::before {
   transition: background-color 0.8s ease;
   overflow: hidden;
   height: 100vh;
+  height: 100dvh;
 }
+
 
 @media (max-width: 900px) and (orientation: landscape) {
   .left-panel {

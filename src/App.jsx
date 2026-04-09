@@ -1492,7 +1492,8 @@ function App() {
         display: 'flex',
         flexDirection: 'row',
         width: '100vw',
-        height: '100vh',
+        height: '100dvh',
+
         overflow: 'hidden',
         position: 'relative',
         backgroundImage: `radial-gradient(circle at 50% 50%, ${SCENARIO_COLORS[scenario]}44 0%, #050505 100%)`,
@@ -1870,7 +1871,8 @@ function App() {
         alignItems: 'center',
         backgroundColor: '#1a1a1a', // Un gris oscuro para notar si la imagen (que es negra) carga
         overflow: 'hidden',
-        minHeight: '100vh' // Asegura que tenga altura
+        minHeight: '100dvh' // Asegura que tenga altura
+
       }}>
 
         {/* Imagen de Fondo del Escenario con Transición */}
