@@ -330,11 +330,12 @@ function App() {
   }, [gameState]);
 
   useEffect(() => {
-    if (currentPlayerIdx === 0 && turn > 1 && gameState !== 'COMBAT' && !activeMonster) {
+    if (gameState === 'EXPLORE' && currentPlayerIdx === 0 && turn > 1 && !activeMonster) {
       const nextScenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
       setScenario(nextScenario);
     }
   }, [turn, currentPlayerIdx, gameState, activeMonster]);
+
 
   useEffect(() => {
     if (gameState === 'VICTORY' || gameState === 'GAMEOVER') {
