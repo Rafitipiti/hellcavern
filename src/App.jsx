@@ -329,12 +329,9 @@ function App() {
     backgroundMusic.playbackRate = (gameState === 'COMBAT') ? 1.2 : 1.0;
   }, [gameState]);
 
-  useEffect(() => {
-    if (gameState === 'EXPLORE' && currentPlayerIdx === 0 && turn > 1 && !activeMonster) {
-      const nextScenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
-      setScenario(nextScenario);
-    }
-  }, [turn, currentPlayerIdx, gameState, activeMonster]);
+  // El escenario ahora se cambia directamente en la lógica de avanzar turno en lanzarDados o executeMove
+  // para evitar saltos inesperados tras finalizar minijuegos.
+
 
 
   useEffect(() => {
@@ -400,7 +397,13 @@ function App() {
         if (randMg === 'RACE') initialTime = 7000;
         if (randMg === 'SHELL') initialTime = 8000;
 
-        setActiveMinigame({ type: randMg, goldReward: Math.floor(Math.random() * 3) + 3, timeLeft: initialTime });
+        setActiveMinigame({
+          type: randMg,
+          goldReward: Math.floor(Math.random() * 3) + 3,
+          timeLeft: initialTime,
+          initialTime: initialTime // Guardamos el tiempo base para el UI
+        });
+
         setMinigameClicks(0);
         setRaceState({ selected: null, positions: [0, 0, 0, 0], finished: false });
 
@@ -1016,9 +1019,13 @@ function App() {
         grantScenarioReward(newPlayers, setPlayers, setMessage);
         setTurn(t => t + 1);
         setCurrentPlayerIdx(0);
+        // Cambiamos el escenario AQUÍ para evitar saltos inesperados tras finalizar minijuegos o eventos
+        const nextScenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+        setScenario(nextScenario);
       } else {
         setCurrentPlayerIdx(i => i + 1);
       }
+
 
       setTimeout(() => {
         setIsTransitioning(false);
@@ -1051,9 +1058,10 @@ function App() {
 
   useEffect(() => {
     if (gameState !== 'MINIGAME' || !activeMinigame || isAutoPlaying) return;
-    // RACE and SHELL manage their own lifecycle — skip global timer for them
+    // RACE y SHELL gestionan su propio ciclo de fin, pero el contador debe seguir corriendo
     if (activeMinigame.type === 'RACE' && raceState.selected !== null) return;
-    if (activeMinigame.type === 'SHELL' && shellState.phase !== 'REVEAL') return;
+    // Eliminado el bloqueo de timer para SHELL durante SHUFFLE/GUESS
+
     const timer = setInterval(() => {
       setActiveMinigame((prev) => {
         if (!prev) return prev;
@@ -1313,10 +1321,11 @@ function App() {
         </h2>
         <p style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '20px' }}>Atención {currentP.name}. Recompensa: 🪙 {activeMinigame.goldReward}</p>
 
-        <div style={{ width: '80%', maxWidth: '400px', height: '20px', backgroundColor: '#333', border: '2px solid #555', marginBottom: '40px' }}>
+        <div style={{ width: '80%', maxWidth: '400px', height: '20px', backgroundColor: '#333', border: '2px solid #555', marginBottom: '40px', overflow: 'hidden' }}>
           <div style={{
-            width: `${Math.max(0, (activeMinigame.timeLeft / 5000) * 100)}%`,
+            width: `${Math.min(100, Math.max(0, (activeMinigame.timeLeft / (activeMinigame.initialTime || 5000)) * 100))}%`,
             height: '100%',
+
             backgroundColor: activeMinigame.timeLeft > 2000 ? 'var(--color-warning)' : 'var(--color-danger)',
             transition: 'width 0.1s linear'
           }} />
